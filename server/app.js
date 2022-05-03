@@ -1,6 +1,8 @@
+
 const express = require('express')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
+const { step1 } = require('./routes/ping')
 
 
 //env varivable//
@@ -12,7 +14,12 @@ const app = express();
 app.use(morgan(ENVIRONMENT));
 app.use(bodyParser.json());
 
-//api routes//
+//routes requires//
+const pingRoutes = require('./routes/ping')
+
+//routes//
+app.use('/api/ping', pingRoutes())
+
 
 
 
