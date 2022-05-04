@@ -15,21 +15,27 @@ const postRoutes = () => {
         error: "sortBy parameter is invalid"
       })
     }
+
+    //when tag is more than one string //
+
+
     console.log(tags.includes(','))
 
     //when tag is one string//
     axios.get(`http://hatchways.io/api/assessment/blog/posts?tag=${tags}&sortBy=${sortBy}&direction=${direction}`).then((doc) => {
 
-      let post = doc.data.posts;
+      let posts = doc.data.posts;
 
       if (direction && direction.toLowerCase() === "desc") {
-        post = post.sort((a, b) => (a[sortBy] < b[sortBy] ? 1 : -1));
+        // post = post.sort((a, b) => (a[sortBy] < b[sortBy] ? 1 : -1));
+        posts = posts.sort((a, b) => parseFloat(b[sortBy]) - parseFloat(a[sortBy]))
       } else {
-        post = post.sort((a, b) => (a[sortBy] > b[sortBy] ? 1 : -1));
+        // post = post.sort((a, b) => (a[sortBy] > b[sortBy] ? 1 : -1));
+        posts = posts.sort((a, b) => parseFloat(a[sortBy]) - parseFloat(b[sortBy]))
       }
 
       res.status(200).send({
-        posts: post
+        posts: posts
       })
 
     })
