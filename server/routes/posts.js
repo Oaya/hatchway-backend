@@ -5,20 +5,30 @@ const router = require('express').Router();
 const postRoutes = () => {
   router.get('/:tags/:sortBy?/:direction?', (req, res) => {
     const { tags, sortBy, direction } = req.params;
-    const sortByArr = ['id', 'reads', 'likes', 'popularity'];
+    const acceptableSort = ['id', 'reads', 'likes', 'popularity'];
+    const acceptableDirection = ['desc', 'asc'];
+
+    //error response when sortBy and direction are invalid//
+    if ((sortBy && !acceptableSort.includes(sortBy)) ||
+      (direction && !acceptableDirection.includes(direction))) {
+      res.status(400).send({
+        error: "sortBy parameter is invalid"
+      })
+    }
+
 
     //when tag is one string//
     axios.get(`http://hatchways.io/api/assessment/blog/posts?tag=${tags}&sortBy=${sortBy}&direction=${direction}`).then((doc) => {
 
       let post = doc.data.posts;
 
-      if (sortBy && sortByArr.includes(sortBy)) {
-        if (direction && direction.toLowerCase() === "desc") {
-          post = post.sort((a, b) => (b[sortBy] > a[sortBy] ? 1 : -1));
-        } else {
-          post = post.sort((a, b) => (b[sortBy] < a[sortBy] ? 1 : -1));
-        }
+
+      if (direction && direction.toLowerCase() === "desc") {
+        post = post.sort((a, b) => (b[sortBy] > a[sortBy] ? 1 : -1));
+      } else {
+        post = post.sort((a, b) => (b[sortBy] < a[sortBy] ? 1 : -1));
       }
+
       res.status(200).send({
         posts: post
       })
