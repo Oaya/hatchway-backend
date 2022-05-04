@@ -1,12 +1,11 @@
 const axios = require("axios");
 const router = require('express').Router();
 
-
 const postRoutes = () => {
   router.get('/:tags/:sortBy?/:direction?', (req, res) => {
     const { tags, sortBy, direction } = req.params;
-    const acceptableSort = ['id', 'reads', 'likes', 'popularity'];
-    const acceptableDirection = ['desc', 'asc'];
+    const acceptableSort = ['id', 'reads', 'likes', 'popularity', undefined];
+    const acceptableDirection = ['desc', 'asc', undefined];
 
     //error response when sortBy and direction are invalid//
     if ((sortBy && !acceptableSort.includes(sortBy)) ||
@@ -17,8 +16,40 @@ const postRoutes = () => {
     };
 
     //when tag is more than one string //
-    //fetch the post for every tag//
     if (tags.includes(',')) {
+      //fetch the post for every tag and create URL//
+      const tagsArray = tags.split(',');
+      const allTagsURLs = []
+      tagsArray.map(tag => {
+        let url = axios.get(`http://hatchways.io/api/assessment/blog/posts?tag=${tag}&sortBy=${sortBy}&direction=${direction}`)
+        allTagsURLs.push(url)
+      });
+      // tagsArray.map(tag => {
+      //   allTagURLs.push(`http://hatchways.io/api/assessment/blog/posts?tag=${tag}&sortBy=${sortBy}&direction=${direction}`);
+
+      // })
+
+
+      // axios.all(allTagURLs.map((endpoint) => axios.get(endpoint))).then(
+      //   (data) => console.log(data),
+      // );
+      //make the separate request for every tag specified//
+      axios
+        .all([...allTagsURLs])
+        .then(axios.spread((...resp) => {
+          let posts;
+          resp.map(response => {
+            console.log(response.data.posts)
+            posts = response.data.posts;
+
+          })
+          res.status(200).send({
+            posts: posts
+          });
+        }))
+
+
+
 
     } else {
       //when tag is one string//
