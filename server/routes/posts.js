@@ -1,5 +1,7 @@
-const axios = require("axios");
-const router = require('express').Router();
+import axios from "axios";
+import express from 'express';
+
+const router = express.Router();
 
 const postRoutes = () => {
   router.get('/:tags/:sortBy?/:direction?', (req, res) => {
@@ -78,4 +80,4 @@ const postRoutes = () => {
   return router;
 }
 
-module.exports = postRoutes
+export default postRoutes

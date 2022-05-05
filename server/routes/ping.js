@@ -1,5 +1,6 @@
-const router = require('express').Router();
+import express from 'express';
 
+const router = express.Router();
 
 const pingRoutes = () => {
   router.get('/', (req, res) => {
@@ -11,6 +12,6 @@ const pingRoutes = () => {
   return router;
 }
 
+export default pingRoutes
 
 
-module.exports = pingRoutes;

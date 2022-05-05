@@ -1,6 +1,11 @@
-const express = require('express')
-const morgan = require('morgan')
-const bodyParser = require('body-parser')
+import express from 'express';
+import morgan from 'morgan';
+import bodyParser from 'body-parser';
+
+//routes requires//
+import pingRoutes from './routes/ping';
+import postRoutes from './routes/posts';
+
 
 //env variable//
 const PORT = 8080;
@@ -13,7 +18,7 @@ app.use(bodyParser.json());
 
 //create middleware for when tag is not present//
 const requireParams = (req, res, next) => {
-  console.log(req.params)
+
   const reqParamList = Object.keys(req.params);
   if (!reqParamList.includes('tags')) {
     res.status(400)
@@ -22,9 +27,7 @@ const requireParams = (req, res, next) => {
   next();
 };
 
-//routes requires//
-const pingRoutes = require('./routes/ping')
-const postRoutes = require('./routes/posts')
+
 
 //routes//
 app.use('/api/ping', pingRoutes())
@@ -32,4 +35,6 @@ app.use('/api/posts', postRoutes(), requireParams)
 
 app.listen(PORT, () => {
   console.log(`Server is listening PORT ${PORT}`)
-})
+});
+
+export default app
