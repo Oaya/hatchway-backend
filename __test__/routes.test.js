@@ -52,7 +52,6 @@ describe("/api/posts route", () => {
 
   describe('single tag params is passed with sortBy and direction', () => {
 
-
     test('should order with given sortBy and direction param', async () => {
       const res = await request(router).get('/api/posts/tech/likes/DESC');
       expect(res.statusCode).toBe(200);
