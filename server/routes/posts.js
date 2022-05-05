@@ -12,7 +12,7 @@ const postRoutes = () => {
     //error response when sortBy and direction are invalid//
     if ((sortBy && !acceptableSort.includes(sortBy)) ||
       (direction && !acceptableDirection.includes(direction.toLowerCase()))) {
-      res.status(400).json({
+      return res.status(400).json({
         error: "sortBy parameter is invalid"
       });
     };
@@ -51,7 +51,7 @@ const postRoutes = () => {
 
           postsArrUnique = sortArray(postsArrUnique);
 
-          res.status(200).send({
+          return res.status(200).json({
             posts: postsArrUnique
           });
         }))
@@ -67,7 +67,7 @@ const postRoutes = () => {
           let posts = doc.data.posts;
           posts = sortArray(posts)
 
-          res.status(200).send({
+          return res.status(200).json({
             posts: posts
           });
 

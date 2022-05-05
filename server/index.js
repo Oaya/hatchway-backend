@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 export const requireParams = (req, res, next) => {
   const reqParamList = Object.keys(req.params);
   if (!reqParamList.includes('tags')) {
-    res.status(400)
+    return res.status(400)
       .json("Tags parameter is required")
   }
   next();

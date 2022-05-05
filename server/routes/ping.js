@@ -4,7 +4,7 @@ const router = express.Router();
 
 const pingRoutes = () => {
   router.get('/', (req, res) => {
-    res.status(200).send({
+    return res.status(200).send({
       success: true
     })
   });
