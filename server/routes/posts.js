@@ -12,7 +12,7 @@ const postRoutes = () => {
     //error response when sortBy and direction are invalid//
     if ((sortBy && !acceptableSort.includes(sortBy)) ||
       (direction && !acceptableDirection.includes(direction.toLowerCase()))) {
-      res.status(400).send({
+      res.status(400).json({
         error: "sortBy parameter is invalid"
       });
     };

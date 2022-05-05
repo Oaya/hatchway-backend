@@ -17,12 +17,11 @@ app.use(morgan(ENVIRONMENT));
 app.use(bodyParser.json());
 
 //create middleware for when tag is not present//
-const requireParams = (req, res, next) => {
-
+export const requireParams = (req, res, next) => {
   const reqParamList = Object.keys(req.params);
   if (!reqParamList.includes('tags')) {
     res.status(400)
-      .send("Tags parameter is required")
+      .json("Tags parameter is required")
   }
   next();
 };
