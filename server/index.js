@@ -27,8 +27,6 @@ const requireParams = (req, res, next) => {
   next();
 };
 
-
-
 //routes//
 app.use('/api/ping', pingRoutes())
 app.use('/api/posts', postRoutes(), requireParams)
@@ -37,4 +35,4 @@ app.listen(PORT, () => {
   console.log(`Server is listening PORT ${PORT}`)
 });
 
-export default app
+export default app;
