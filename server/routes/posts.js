@@ -17,65 +17,41 @@ const postRoutes = () => {
       });
     };
 
-    //sort array by direction//
-    const sortArray = (postsArray) => {
+    //fetch the post for every tag and create URL//
+    const tagsArray = tags.split(',');
+    const allTagsURLs = [];
+    tagsArray.map(tag => {
+      let url = axios.get(`http://hatchways.io/api/assessment/blog/posts?tag=${tag}&sortBy=${sortBy}&direction=${direction}`)
+      allTagsURLs.push(url)
+    });
 
-      if (direction && direction.toLowerCase() === "desc") {
-        postsArray = postsArray.sort((a, b) => parseFloat(b[sortBy]) - parseFloat(a[sortBy]))
-      } else {
-        postsArray = postsArray.sort((a, b) => parseFloat(a[sortBy]) - parseFloat(b[sortBy]))
-      }
-      return postsArray;
-    }
+    //make the separate request for every tag specified//
+    axios
+      .all([...allTagsURLs])
+      .then(axios.spread((...doc) => {
+        let posts = [];
+        doc.map(response => {
+          posts.push(...response.data.posts);
+        })
 
-    //when tag is more than one string //
-    if (tags.includes(',')) {
-      //fetch the post for every tag and create URL//
-      const tagsArray = tags.split(',');
-      const allTagsURLs = []
-      tagsArray.map(tag => {
-        let url = axios.get(`http://hatchways.io/api/assessment/blog/posts?tag=${tag}&sortBy=${sortBy}&direction=${direction}`)
-        allTagsURLs.push(url)
+        //filter posts by id//
+        let postsArrUnique = [...new Map(posts.map(post => [post.id, post])).values()];
+
+        //sort array by direction//
+        if (direction && direction.toLowerCase() === "desc") {
+          postsArrUnique = postsArrUnique.sort((a, b) => parseFloat(b[sortBy]) - parseFloat(a[sortBy]))
+        } else {
+          postsArrUnique = postsArrUnique.sort((a, b) => parseFloat(a[sortBy]) - parseFloat(b[sortBy]))
+        }
+
+        return res.status(200).json({
+          posts: postsArrUnique
+        });
+      }))
+      .catch((err) => {
+        console.log(err)
       });
 
-      //make the separate request for every tag specified//
-      axios
-        .all([...allTagsURLs])
-        .then(axios.spread((...doc) => {
-          let posts = [];
-          doc.map(response => {
-            posts.push(...response.data.posts);
-          })
-          //filter posts by id//
-          let postsArrUnique = [...new Map(posts.map(post => [post.id, post])).values()]
-
-          postsArrUnique = sortArray(postsArrUnique);
-
-          return res.status(200).json({
-            posts: postsArrUnique
-          });
-        }))
-        .catch((err) => {
-          console.log(err)
-        });
-
-    } else {
-      //when tag is one string//
-      axios
-        .get(`http://hatchways.io/api/assessment/blog/posts?tag=${tags}&sortBy=${sortBy}&direction=${direction}`)
-        .then((doc) => {
-          let posts = doc.data.posts;
-          posts = sortArray(posts)
-
-          return res.status(200).json({
-            posts: posts
-          });
-
-        })
-        .catch((err) => {
-          console.log(err)
-        });
-    }
   });
   return router;
 }

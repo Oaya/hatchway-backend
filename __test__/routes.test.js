@@ -2,11 +2,7 @@ import request from 'supertest';
 import app from '../server/index';
 import express from 'express';
 
-import { requireParams } from '../server/index';
-
-
-
-const router = express()
+const router = express();
 router.use('/', app);
 
 describe("/api/ping route", () => {
