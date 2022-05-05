@@ -7,10 +7,9 @@ const postRoutes = () => {
     const acceptableSort = ['id', 'reads', 'likes', 'popularity'];
     const acceptableDirection = ['desc', 'asc'];
 
-
     //error response when sortBy and direction are invalid//
     if ((sortBy && !acceptableSort.includes(sortBy)) ||
-      (direction && !acceptableDirection.includes(direction))) {
+      (direction && !acceptableDirection.includes(direction.toLowerCase()))) {
       res.status(400).send({
         error: "sortBy parameter is invalid"
       });
@@ -18,6 +17,7 @@ const postRoutes = () => {
 
     //sort array by direction//
     const sortArray = (postsArray) => {
+
       if (direction && direction.toLowerCase() === "desc") {
         postsArray = postsArray.sort((a, b) => parseFloat(b[sortBy]) - parseFloat(a[sortBy]))
       } else {
@@ -54,10 +54,7 @@ const postRoutes = () => {
           });
         }))
         .catch((err) => {
-          //error response when tags is not present//
-          res.status(400).send({
-            error: "Tags parameter is required"
-          });
+          console.log(err)
         });
 
     } else {
@@ -74,10 +71,7 @@ const postRoutes = () => {
 
         })
         .catch((err) => {
-          //error response when tags is not present//
-          res.status(400).send({
-            error: "Tags parameter is required"
-          });
+          console.log(err)
         });
     }
   });
