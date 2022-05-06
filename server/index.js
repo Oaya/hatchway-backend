@@ -1,6 +1,8 @@
 import express from 'express';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
+import apicache from 'apicache';
+
 
 //routes requires//
 import pingRoutes from './routes/ping';
@@ -13,8 +15,10 @@ const ENVIRONMENT = 'dev';
 
 //middleware//
 const app = express();
+// const cache = apicache.middleware
 app.use(morgan(ENVIRONMENT));
 app.use(bodyParser.json());
+// app.use(cache('5 minutes'))
 
 //create middleware for when tag is not present//
 export const requireParams = (req, res, next) => {
